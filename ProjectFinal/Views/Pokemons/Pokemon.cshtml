@@ -1,0 +1,69 @@
+﻿@model List<Pokemon>
+<h1>Pokemon Database</h1>
+
+@if (TempData.Keys.Contains("message"))
+{
+    <h4 class="bg-info text-center text-white p-2">
+        @TempData["message"]
+    </h4>
+}
+
+<form asp-controller="Pokemons" asp-action="Pokemon" method="get" class="my-3 d-flex align-items-end">
+    <div class="flex-grow-1 mr-2">
+        <input type="hidden" name="sortOrder" value="@ViewBag.NameSortParam" />
+        <div class="form-group mb-0">
+            <label for="region" class="mb-0">Filter by Region:</label>
+            <select id="region" name="region" class="form-control">
+                <option value="">All</option>
+                <option value="Kanto">Kanto</option>
+                <option value="Johto">Johto</option>
+                <option value="Hoenn">Hoenn</option>
+                <option value="Sinnoh">Sinnoh</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                <a asp-controller="Pokemons" asp-action="Pokemon"
+                   asp-route-region="@ViewBag.Region" asp-route-sortOrder="@ViewBag.NameSortParam" class="text-blue">
+                    Name
+                </a>
+            </th>
+            <th>Generation</th>
+            <th>Region</th>
+            <th>Date Added</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Pokemon pokemon in Model)
+        {
+            <tr>
+                <td>@pokemon.Name</td>
+                <td>@pokemon.Generation</td>
+                <td>@pokemon.Region</td>
+                <td>@pokemon.DateAdded</td>
+                <td class="text-center">
+                    <a asp-controller="Pokemons" asp-action="Edit"
+                       asp-route-id="@pokemon.PokemonId" class="btn btn-primary">
+                        Edit
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a asp-controller="Pokemons" asp-action="Delete"
+                       asp-route-id="@pokemon.PokemonId" class="btn btn-danger">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Pokemons" asp-action="Add" class="btn btn-success">Add Pokemon</a>
